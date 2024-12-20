@@ -85,8 +85,8 @@ class DbusNewClientCreated(BaseObject, ServiceInterface):
             event.address,
             event.contact,
             event.phone,
-            event.id,
             json.dumps(event.previous_event_ids),
+            event.id,
         ]
 
     @classmethod
@@ -109,15 +109,14 @@ class DbusNewClientCreated(BaseObject, ServiceInterface):
         :return: The NewClientCreated event.
         :rtype: org.acmsl.licdata.events.NewClientCreated
         """
-        email, address, contact, phone, event_id, prev_event_ids = message.body
+        email, address, contact, phone, prev_event_ids, event_id = message.body
         return NewClientCreated(
             email,
             address,
             contact,
             phone,
-            None,
-            event_id,
             json.loads(prev_event_ids),
+            event_id,
         )
 
 
