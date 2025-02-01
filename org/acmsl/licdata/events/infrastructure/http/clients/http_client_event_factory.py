@@ -19,12 +19,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from org.acmsl.licdata.events.clients import BaseClientEvent, NewClientRequested
+from org.acmsl.licdata.events.clients import (
+    BaseClientEvent,
+    ListClientsRequested,
+    NewClientRequested,
+)
 from org.acmsl.licdata.events.infrastructure.http.clients import (
     HttpBaseClientEvent,
-    HttpNewClientCreated,
-    HttpInvalidNewClientRequest,
     HttpClientAlreadyExists,
+    HttpInvalidListClientsRequest,
+    HttpInvalidNewClientRequest,
+    HttpMatchingClientsFound,
+    HttpNewClientCreated,
+    HttpNoMatchingClientsFound,
 )
 from pythoneda.shared import BaseObject
 from typing import Dict
@@ -83,7 +90,29 @@ class HttpClientEventFactory(BaseObject):
                 result = target(event, newClientRequested)
                 break
 
-        print(f"Returning {result} from {event}")
+        return result
+
+    def from_list_clients_requested(
+        self, event: BaseClientEvent, listClientsRequested: ListClientsRequested
+    ) -> HttpBaseClientEvent:
+        """
+        Creates a HTTP-based event from given domain event.
+        :param event: The domain event, generated after a ListClientsRequested event.
+        :type event: org.acmsl.licdata.events.clients.BaseClientEvent
+        :param listClientsRequested: The initial new-client-requested event.
+        :type listClientsRequested: org.acmsl.licdata.events.clients.ListClientsRequested
+        """
+        result = None
+
+        for target in [
+            HttpMatchingClientsFound,
+            HttpNoMatchingClientsFound,
+            HttpInvalidListClientsRequest,
+        ]:
+            if isinstance(event, target.event_class()):
+                result = target(event, listClientsRequested)
+                break
+
         return result
 
 

@@ -26,6 +26,10 @@ from .http_client_already_exists import HttpClientAlreadyExists
 from .http_invalid_new_client_request import HttpInvalidNewClientRequest
 from .http_new_client_created import HttpNewClientCreated
 from .http_new_client_requested import HttpNewClientRequested
+from .http_list_clients_requested import HttpListClientsRequested
+from .http_invalid_list_clients_request import HttpInvalidListClientsRequest
+from .http_matching_clients_found import HttpMatchingClientsFound
+from .http_no_matching_clients_found import HttpNoMatchingClientsFound
 from .http_client_event_factory import HttpClientEventFactory
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

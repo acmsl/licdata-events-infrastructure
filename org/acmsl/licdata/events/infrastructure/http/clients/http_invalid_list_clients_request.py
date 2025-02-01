@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/clients/http_invalid_new_client_request.py
+org/acmsl/licdata/events/infrastructure/http/clients/http_invalid_list_clients_request.py
 
-This file defines the HttpInvalidNewClientRequest class.
+This file defines the HttpInvalidListClientsRequest class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -20,19 +20,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from .http_base_client_event import HttpBaseClientEvent
-from org.acmsl.licdata.events.clients import InvalidNewClientRequest
+from org.acmsl.licdata.events.clients import InvalidListClientsRequest
 from pythoneda.shared.infrastructure.http import HttpMethod
 from typing import Dict, Type
 
 
-class HttpInvalidNewClientRequest(HttpBaseClientEvent):
+class HttpInvalidListClientsRequest(HttpBaseClientEvent):
     """
-    HTTP interface for InvalidNewClientRequest
+    HTTP interface for InvalidListClientsRequest
 
-    Class name: HttpInvalidNewClientRequest
+    Class name: HttpInvalidListClientsRequest
 
     Responsibilities:
-        - Define the HTTP interface for the InvalidNewClientRequest event.
+        - Define the HTTP interface for the InvalidListClientsRequest event.
 
     Collaborators:
         - None
@@ -45,10 +45,10 @@ class HttpInvalidNewClientRequest(HttpBaseClientEvent):
         headers: Dict,
         pathParameters: Dict,
         body: Dict,
-        event: InvalidNewClientRequest,
+        event: InvalidListClientsRequest,
     ):
         """
-        Creates a new HttpInvalidNewClientRequest.
+        Creates a new HttpInvalidListClientsRequest.
         :param httpMethod: The HTTP method.
         :type httpMethod: pythoneda.shared.infrastructure.http.HttpMethod
         :param queryStringParameters: The query string parameters.
@@ -65,13 +65,13 @@ class HttpInvalidNewClientRequest(HttpBaseClientEvent):
         )
 
     @classmethod
-    def event_class(cls) -> Type[InvalidNewClientRequest]:
+    def event_class(cls) -> Type[InvalidListClientsRequest]:
         """
         Retrieves the class of the event.
         :return: The class.
-        :type: Type[org.acmsl.licdata.event.clients.InvalidNewClientRequest]
+        :type: Type[org.acmsl.licdata.event.clients.InvalidListClientsRequest]
         """
-        return InvalidNewClientRequest
+        return InvalidListClientsRequest
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

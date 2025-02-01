@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/http_new_client_created.py
+org/acmsl/licdata/events/infrastructure/http/http_matching_clients_found.py
 
-This file defines the HttpNewClientCreated class.
+This file defines the HttpMatchingClientsFound class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -19,53 +19,51 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from .http_base_client_event import HttpBaseClientEvent
-import json
-from org.acmsl.licdata.events.clients import NewClientCreated, NewClientRequested
-from pythoneda.shared import BaseObject
+from org.acmsl.licdata.events.clients import ListClientsRequested, MatchingClientsFound
+from pythoneda.shared import Event
 from typing import Dict, Type
 
 
-class HttpNewClientCreated(BaseObject):
+class HttpMatchingClientsFound(Event):
     """
-    HTTP interface for NewClientCreated
+    HTTP interface for MatchingClientsFound
 
-    Class name: HttpNewClientCreated
+    Class name: HttpMatchingClientsFound
 
     Responsibilities:
-        - Define the HTTP interface for the NewClientCreated event.
+        - Define the HTTP interface for the MatchingClientsFound event.
 
     Collaborators:
         - None
     """
 
-    def __init__(self, event: NewClientCreated, sourceEvent: NewClientRequested):
+    def __init__(self, event: Event, sourceEvent: ListClientsRequested):
         """
-        Creates a new HttpNewClientCreated.
-        :param event: The domain event, generated after a NewClientRequested event.
-        :type event: org.acmsl.licdata.events.clients.BaseClientEvent
-        :param sourceEvent: The initial new-client-requested event.
-        :type sourceEvent: org.acmsl.licdata.events.clients.NewClientRequested
+        Creates a new HttpMatchingClientsFound.
+        :param event: The domain event, generated after a ListClientsRequested event.
+        :type event: pythoneda.shared.Event
+        :param sourceEvent: The initial list-clients-requested event.
+        :type sourceEvent: org.acmsl.licdata.events.clients.ListClientsRequested
         """
-        super().__init__()
         self._event = event
         self._source_event = sourceEvent
+        super().__init__()
 
     @property
-    def event(self) -> NewClientCreated:
+    def event(self) -> Event:
         """
         Retrieves the event.
         :return: The event.
-        :type: org.acmsl.licdata.events.clients.NewClientCreated
+        :type: pythoneda.shared.Event
         """
         return self._event
 
     @property
-    def source_event(self) -> NewClientRequested:
+    def source_event(self) -> ListClientsRequested:
         """
         Retrieves the source event.
         :return: The source event.
-        :type: org.acmsl.licdata.events.clients.NewClientRequested
+        :type: org.acmsl.licdata.events.clients.ListClientsRequested
         """
         return self._source_event
 
@@ -76,30 +74,21 @@ class HttpNewClientCreated(BaseObject):
         :return: The status code.
         :type: int
         """
-        return 201
+        return 200
 
     @property
-    def body(self) -> str:
+    def body(self) -> Dict:
         """
         Retrieves the body.
         :return: The body.
         :type: Dict
         """
-        aux = {
-            "id": self._event.id,
-            "email": self._event.email,
-            "address": self._event.address,
-            "contact": self._event.contact,
-            "phone": self._event.phone,
-        }
-        print(f"aux: {aux}")
+        import json
+
         return json.dumps(
             {
-                "id": self._event.id,
-                "email": self._event.email,
-                "address": self._event.address,
-                "contact": self._event.contact,
-                "phone": self._event.phone,
+                "clients": [c for c in self._event.matching_clients],
+                "criteria": self._event.criteria,
             }
         )
 
@@ -110,7 +99,7 @@ class HttpNewClientCreated(BaseObject):
         :return: The headers.
         :type: Dict
         """
-        return {"Location": f"/clients/{self._event.id}"}
+        return {}
 
     @property
     def mime_type(self) -> str:
@@ -131,13 +120,13 @@ class HttpNewClientCreated(BaseObject):
         return "utf-8"
 
     @classmethod
-    def event_class(cls) -> Type[NewClientCreated]:
+    def event_class(cls) -> Type[MatchingClientsFound]:
         """
         Retrieves the class of the event.
         :return: The class.
-        :type: Type[org.acmsl.licdata.event.clients.NewClientCreated]
+        :type: Type[org.acmsl.licdata.events.clients.MatchingClientsFound]
         """
-        return NewClientCreated
+        return MatchingClientsFound
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

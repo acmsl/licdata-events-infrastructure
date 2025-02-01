@@ -109,6 +109,33 @@ class HttpBaseClientEvent(HttpEvent):
 
         return event_class(self.email, self.address, self.contact, self.phone)
 
+    @property
+    def headers(self) -> Dict:
+        """
+        Retrieves the headers.
+        :return: The headers.
+        :type: Dict
+        """
+        return {}
+
+    @property
+    def mime_type(self) -> str:
+        """
+        Retrieves the MIME type.
+        :return: The MIME type.
+        :type: str
+        """
+        return "application/json"
+
+    @property
+    def charset(self) -> str:
+        """
+        Retrieves the charset.
+        :return: The charset.
+        :type: str
+        """
+        return "utf-8"
+
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et
 # Local Variables:
