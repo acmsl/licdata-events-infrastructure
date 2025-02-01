@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/dbus/__init__.py
+org/acmsl/licdata/events/infrastructure/dbus/clients/__init__.py
 
-This file ensures org.acmsl.licdata.events.infrastructure.dbus is a namespace.
+This file ensures org.acmsl.licdata.events.infrastructure.dbus.clients is a namespace.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -21,7 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
-DBUS_PATH = "/acmsl/licdata"
+from .dbus_new_client_created import DbusNewClientCreated
+from .dbus_new_client_requested import DbusNewClientRequested
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et
 # Local Variables:

@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-pythoneda/shared/artifact/artifact/events/infrastructure/dbus/dbus_new_client_created.py
+pythoneda/shared/artifact/artifact/events/infrastructure/dbus/dbus_new_client_requested.py
 
-This file defines the DbusNewClientCreated class.
+This file defines the DbusNewClientRequested class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -22,21 +22,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from dbus_next import Message
 from dbus_next.service import signal
 import json
-from org.acmsl.licdata.events import NewClientCreated
+from org.acmsl.licdata.events.clients import NewClientRequested
 from org.acmsl.licdata.events.infrastructure.dbus import DBUS_PATH
 from pythoneda.shared import Event
 from pythoneda.shared.infrastructure.dbus import DbusEvent
 from typing import List, Type
 
 
-class DbusNewClientCreated(DbusEvent):
+class DbusNewClientRequested(DbusEvent):
     """
-    D-Bus interface for NewClientCreated
+    D-Bus interface for NewClientRequested
 
-    Class name: DbusNewClientCreated
+    Class name: DbusNewClientRequested
 
     Responsibilities:
-        - Define the d-bus interface for the NewClientCreated event.
+        - Define the d-bus interface for the NewClientRequested event.
 
     Collaborators:
         - None
@@ -44,14 +44,14 @@ class DbusNewClientCreated(DbusEvent):
 
     def __init__(self):
         """
-        Creates a new DbusNewClientCreated.
+        Creates a new DbusNewClientRequested.
         """
-        super().__init__("Licdata_NewClientCreated")
+        super().__init__("Licdata_NewClientRequested")
 
     @signal()
-    def NewClientCreated(self, email: "s", address: "s", contact: "s", phone: "s"):
+    def NewClientRequested(self, email: "s", address: "s", contact: "s", phone: "s"):
         """
-        Defines the NewClientCreated d-bus signal.
+        Defines the NewClientRequested d-bus signal.
         :param email: The email.
         :type email: str
         :param address: The address.
@@ -73,11 +73,11 @@ class DbusNewClientCreated(DbusEvent):
         return DBUS_PATH
 
     @classmethod
-    def transform(cls, event: NewClientCreated) -> List[str]:
+    def transform(cls, event: NewClientRequested) -> List[str]:
         """
         Transforms given event to signal parameters.
         :param event: The event to transform.
-        :type event: org.acmsl.licdata.events.NewClientCreated
+        :type event: org.acmsl.licdata.events.NewClientRequested
         :return: The event information.
         :rtype: List[str]
         """
@@ -91,27 +91,27 @@ class DbusNewClientCreated(DbusEvent):
         ]
 
     @classmethod
-    def sign(cls, event: NewClientCreated) -> str:
+    def sign(cls, event: NewClientRequested) -> str:
         """
         Retrieves the signature for the parameters of given event.
         :param event: The domain event.
-        :type event: org.acmsl.licdata.events.NewClientCreated
+        :type event: org.acmsl.licdata.events.NewClientRequested
         :return: The signature.
         :rtype: str
         """
         return "ssssss"
 
     @classmethod
-    def parse(cls, message: Message) -> NewClientCreated:
+    def parse(cls, message: Message) -> NewClientRequested:
         """
-        Parses given d-bus message containing a NewClientCreated event.
+        Parses given d-bus message containing a NewClientRequested event.
         :param message: The message.
         :type message: dbus_next.Message
-        :return: The NewClientCreated event.
-        :rtype: org.acmsl.licdata.events.NewClientCreated
+        :return: The NewClientRequested event.
+        :rtype: org.acmsl.licdata.events.NewClientRequested
         """
         email, address, contact, phone, prev_event_ids, event_id = message.body
-        return NewClientCreated(
+        return NewClientRequested(
             email,
             address,
             contact,
@@ -127,7 +127,7 @@ class DbusNewClientCreated(DbusEvent):
         :return: Such class.
         :rtype: type(pythoneda.shared.Event)
         """
-        return NewClientCreated
+        return NewClientRequested
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et
