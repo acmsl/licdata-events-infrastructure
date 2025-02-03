@@ -20,11 +20,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from org.acmsl.licdata.events.clients import ListClientsRequested, MatchingClientsFound
-from pythoneda.shared import Event
+from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
 
-class HttpMatchingClientsFound(Event):
+class HttpMatchingClientsFound(HttpResponse):
     """
     HTTP interface for MatchingClientsFound
 
@@ -37,35 +37,17 @@ class HttpMatchingClientsFound(Event):
         - None
     """
 
-    def __init__(self, event: Event, sourceEvent: ListClientsRequested):
+    def __init__(
+        self, responseEvent: MatchingClientsFound, sourceEvent: ListClientsRequested
+    ):
         """
         Creates a new HttpMatchingClientsFound.
-        :param event: The domain event, generated after a ListClientsRequested event.
-        :type event: pythoneda.shared.Event
+        :param responseEvent: The domain event, generated after a ListClientsRequested event.
+        :type responseEvent: org.acmsl.licdata.events.clients.MatchingClientsFound
         :param sourceEvent: The initial list-clients-requested event.
         :type sourceEvent: org.acmsl.licdata.events.clients.ListClientsRequested
         """
-        self._event = event
-        self._source_event = sourceEvent
-        super().__init__()
-
-    @property
-    def event(self) -> Event:
-        """
-        Retrieves the event.
-        :return: The event.
-        :type: pythoneda.shared.Event
-        """
-        return self._event
-
-    @property
-    def source_event(self) -> ListClientsRequested:
-        """
-        Retrieves the source event.
-        :return: The source event.
-        :type: org.acmsl.licdata.events.clients.ListClientsRequested
-        """
-        return self._source_event
+        super().__init__(responseEvent=responseEvent, sourceEvent=sourceEvent)
 
     @property
     def status_code(self) -> int:

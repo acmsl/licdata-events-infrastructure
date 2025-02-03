@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/clients/http_client_event_factory.py
+org/acmsl/licdata/events/infrastructure/http/clients/http_client_response_factory.py
 
-This file defines the HttpClientEventFactory class.
+This file defines the HttpClientResponseFactory class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -21,30 +21,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from org.acmsl.licdata.events.clients import (
     BaseClientEvent,
+    DeleteClientRequested,
     ListClientsRequested,
     NewClientRequested,
 )
 from org.acmsl.licdata.events.infrastructure.http.clients import (
-    HttpBaseClientEvent,
     HttpClientAlreadyExists,
+    HttpClientDeleted,
+    HttpInvalidDeleteClientRequest,
     HttpInvalidListClientsRequest,
     HttpInvalidNewClientRequest,
     HttpMatchingClientsFound,
     HttpNewClientCreated,
     HttpNoMatchingClientsFound,
 )
-from pythoneda.shared import BaseObject
+from pythoneda.shared import BaseObject, Event
+from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict
 
 
-class HttpClientEventFactory(BaseObject):
+class HttpClientResponseFactory(BaseObject):
     """
     Factory for client-related events.
 
-    Class name: HttpClientEventFactory
+    Class name: HttpClientResponseFactory
 
     Responsibilities:
-        - Define factory methods for client-related events from HTTP events.
+        - Define factory methods for client-related HTTP responses.
 
     Collaborators:
         - None
@@ -54,30 +57,32 @@ class HttpClientEventFactory(BaseObject):
 
     def __init__(self):
         """
-        Creates a new HttpClientEventFactory.
+        Creates a new HttpClientResponseFactory.
         """
         super().__init__()
 
     @classmethod
-    def instance(cls) -> "HttpClientEventFactory":
+    def instance(cls) -> "HttpClientResponseFactory":
         """
         Retrieves the instance.
         :return: Such instance.
-        :rtype: org.acmsl.licdata.events.infrastructure.http.clients.HttpClientEventFactory
+        :rtype: org.acmsl.licdata.events.infrastructure.http.clients.HttpClientResponseFactory
         """
         if cls._singleton is None:
             cls._singleton = cls()
         return cls._singleton
 
     def from_new_client_requested(
-        self, event: BaseClientEvent, newClientRequested: NewClientRequested
-    ) -> HttpBaseClientEvent:
+        self, event: Event, newClientRequested: DeleteClientRequested
+    ) -> HttpResponse:
         """
         Creates a HTTP-based event from given domain event.
-        :param event: The domain event, generated after a NewClientRequested event.
-        :type event: org.acmsl.licdata.events.clients.BaseClientEvent
+        :param event: The domain event, generated after a DeleteClientRequested event.
+        :type event: pythoneda.shared.Event
         :param newClientRequested: The initial new-client-requested event.
-        :type newClientRequested: org.acmsl.licdata.events.clients.NewClientRequested
+        :type newClientRequested: org.acmsl.licdata.events.clients.DeleteClientRequested
+        :return: The HTTP response.
+        :rtype: pythoneda.shared.infrastructure.http.HttpResponse
         """
         result = None
 
@@ -87,20 +92,22 @@ class HttpClientEventFactory(BaseObject):
             HttpClientAlreadyExists,
         ]:
             if isinstance(event, target.event_class()):
-                result = target(event, newClientRequested)
+                result = target(responseEvent=event, sourceEvent=newClientRequested)
                 break
 
         return result
 
     def from_list_clients_requested(
-        self, event: BaseClientEvent, listClientsRequested: ListClientsRequested
-    ) -> HttpBaseClientEvent:
+        self, event: Event, listClientsRequested: ListClientsRequested
+    ) -> HttpResponse:
         """
         Creates a HTTP-based event from given domain event.
         :param event: The domain event, generated after a ListClientsRequested event.
-        :type event: org.acmsl.licdata.events.clients.BaseClientEvent
+        :type event: pythoneda.shared.Event
         :param listClientsRequested: The initial new-client-requested event.
         :type listClientsRequested: org.acmsl.licdata.events.clients.ListClientsRequested
+        :return: The HTTP response.
+        :rtype: pythoneda.shared.infrastructure.http.HttpResponse
         """
         result = None
 
@@ -110,7 +117,32 @@ class HttpClientEventFactory(BaseObject):
             HttpInvalidListClientsRequest,
         ]:
             if isinstance(event, target.event_class()):
-                result = target(event, listClientsRequested)
+                result = target(responseEvent=event, sourceEvent=listClientsRequested)
+                break
+
+        return result
+
+    def from_delete_client_requested(
+        self, event: Event, deleteClientRequested: DeleteClientRequested
+    ) -> HttpResponse:
+        """
+        Creates a HTTP-based event from given domain event.
+        :param event: The domain event, generated after a DeleteClientRequested event.
+        :type event: pythoneda.shared.Event
+        :param deleteClientRequested: The initial new-client-requested event.
+        :type deleteClientRequested: org.acmsl.licdata.events.clients.DeleteClientRequested
+        :return: The HTTP response.
+        :rtype: pythoneda.shared.infrastructure.http.HttpResponse
+        """
+        result = None
+
+        for target in [
+            HttpClientDeleted,
+            HttpInvalidDeleteClientRequest,
+            HttpNoMatchingClientsFound,
+        ]:
+            if isinstance(event, target.event_class()):
+                result = target(responseEvent=event, sourceEvent=deleteClientRequested)
                 break
 
         return result

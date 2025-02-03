@@ -23,11 +23,11 @@ from org.acmsl.licdata.events.clients import (
     ListClientsRequested,
     NoMatchingClientsFound,
 )
-from pythoneda.shared import Event
+from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
 
-class HttpNoMatchingClientsFound(Event):
+class HttpNoMatchingClientsFound(HttpResponse):
     """
     HTTP interface for NoMatchingClientsFound
 
@@ -40,35 +40,17 @@ class HttpNoMatchingClientsFound(Event):
         - None
     """
 
-    def __init__(self, event: Event, sourceEvent: ListClientsRequested):
+    def __init__(
+        self, responseEvent: NoMatchingClientsFound, sourceEvent: ListClientsRequested
+    ):
         """
         Creates a new HttpNoMatchingClientsFound.
-        :param event: The domain event, generated after a ListClientsRequested event.
-        :type event: pythoneda.shared.Event
+        :param responseEvent: The domain event, generated after a ListClientsRequested event.
+        :type responseEvent: org.acmsl.licdata.events.clients.NoMatchingClientsFound
         :param sourceEvent: The initial list-clients-requested event.
         :type sourceEvent: org.acmsl.licdata.events.clients.ListClientsRequested
         """
-        self._event = event
-        self._source_event = sourceEvent
-        super().__init__()
-
-    @property
-    def event(self) -> Event:
-        """
-        Retrieves the event.
-        :return: The event.
-        :type: pythoneda.shared.Event
-        """
-        return self._event
-
-    @property
-    def source_event(self) -> ListClientsRequested:
-        """
-        Retrieves the source event.
-        :return: The source event.
-        :type: org.acmsl.licdata.events.clients.ListClientsRequested
-        """
-        return self._source_event
+        super().__init__(responseEvent=responseEvent, sourceEvent=sourceEvent)
 
     @property
     def status_code(self) -> int:
@@ -86,11 +68,40 @@ class HttpNoMatchingClientsFound(Event):
         :return: The body.
         :type: Dict
         """
+        import json
+
         return json.dumps(
             {
-                "message": "No Clients found",
+                "message": "No clients found",
             }
         )
+
+    @property
+    def headers(self) -> Dict:
+        """
+        Retrieves the headers.
+        :return: The headers.
+        :type: Dict
+        """
+        return {}
+
+    @property
+    def mime_type(self) -> str:
+        """
+        Retrieves the MIME type.
+        :return: The MIME type.
+        :type: str
+        """
+        return "application/json"
+
+    @property
+    def charset(self) -> str:
+        """
+        Retrieves the charset.
+        :return: The charset.
+        :type: str
+        """
+        return "utf-8"
 
     @classmethod
     def event_class(cls) -> Type[NoMatchingClientsFound]:

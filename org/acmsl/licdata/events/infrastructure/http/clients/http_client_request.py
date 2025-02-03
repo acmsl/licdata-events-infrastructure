@@ -2,7 +2,7 @@
 """
 org/acmsl/licdata/events/infrastructure/http/http_new_client_created.py
 
-This file defines the HttpBaseClientEvent class.
+This file defines the HttpClientRequest class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -19,17 +19,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from org.acmsl.licdata.events.clients import BaseClientEvent
 from pythoneda.shared import Event
-from pythoneda.shared.infrastructure.http import HttpEvent, HttpMethod
+from pythoneda.shared.infrastructure.http import HttpMethod, HttpRequest
 from typing import Dict
 
 
-class HttpBaseClientEvent(HttpEvent):
+class HttpClientRequest(HttpRequest):
     """
     Base class for client-related HTTP event.
 
-    Class name: HttpBaseClientEvent
+    Class name: HttpClientRequest
 
     Responsibilities:
         - Define common data and methods for client-related HTTP events.
@@ -47,7 +46,7 @@ class HttpBaseClientEvent(HttpEvent):
         body: Dict,
     ):
         """
-        Creates a new HttpBaseClientEvent.
+        Creates a new HttpClientRequest.
         :param httpMethod: The HTTP method.
         :type httpMethod: pythoneda.shared.infrastructure.http.HttpMethod
         :param queryStringParameters: The query string parameters.
@@ -62,6 +61,15 @@ class HttpBaseClientEvent(HttpEvent):
         super().__init__(
             httpMethod, queryStringParameters, headers, pathParameters, body
         )
+
+    @property
+    def entity_id(self) -> str:
+        """
+        Retrieves the id of the entity.
+        :return: Such value.
+        :rtype: str
+        """
+        return self.retrieve_param("id", None)
 
     @property
     def email(self) -> str:
@@ -107,7 +115,12 @@ class HttpBaseClientEvent(HttpEvent):
         """
         event_class = self.__class__.event_class()
 
-        return event_class(self.email, self.address, self.contact, self.phone)
+        return event_class(
+            email=self.email,
+            address=self.address,
+            contact=self.contact,
+            phone=self.phone,
+        )
 
     @property
     def headers(self) -> Dict:

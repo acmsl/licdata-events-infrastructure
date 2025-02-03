@@ -19,13 +19,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from .http_base_client_event import HttpBaseClientEvent
+from .http_client_request import HttpClientRequest
 from org.acmsl.licdata.events.clients import NewClientRequested
-from pythoneda.shared.infrastructure.http import HttpEvent, HttpMethod
+from pythoneda.shared.infrastructure.http import HttpMethod
 from typing import Dict, Type
 
 
-class HttpNewClientRequested(HttpBaseClientEvent):
+class HttpNewClientRequested(HttpClientRequest):
     """
     HTTP interface for NewClientRequested
 

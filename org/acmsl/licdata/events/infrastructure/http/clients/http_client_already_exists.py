@@ -19,13 +19,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from .http_base_client_event import HttpBaseClientEvent
-from org.acmsl.licdata.events.clients import ClientAlreadyExists
-from pythoneda.shared.infrastructure.http import HttpMethod
+from org.acmsl.licdata.events.clients import ClientAlreadyExists, NewClientRequested
+from pythoneda.shared.infrastructure.http import HttpMethod, HttpResponse
 from typing import Dict, Type
 
 
-class HttpClientAlreadyExists(HttpBaseClientEvent):
+class HttpClientAlreadyExists(HttpResponse):
     """
     HTTP interface for ClientAlreadyExists
 
@@ -39,30 +38,67 @@ class HttpClientAlreadyExists(HttpBaseClientEvent):
     """
 
     def __init__(
-        self,
-        httpMethod: HttpMethod,
-        queryStringParameters: Dict,
-        headers: Dict,
-        pathParameters: Dict,
-        body: Dict,
-        event: ClientAlreadyExists,
+        self, responseEvent: ClientAlreadyExists, sourceEvent: NewClientRequested
     ):
         """
         Creates a new HttpClientAlreadyExists.
-        :param httpMethod: The HTTP method.
-        :type httpMethod: pythoneda.shared.infrastructure.http.HttpMethod
-        :param queryStringParameters: The query string parameters.
-        :type queryStringParameters: Dict
-        :param headers: The headers.
-        :type headers: Dict
-        :param pathParameters: The path parameters.
-        :type pathParameters: Dict
-        :param body: The body.
-        :type body: Dict
+        :param responseEvent: The domain event, generated after a NewClientRequested event.
+        :type responseEvent: org.acmsl.licdata.events.clients.ClientAlreadyExists
+        :param sourceEvent: The initial new-client-requested event.
+        :type sourceEvent: org.acmsl.licdata.events.clients.NewClientRequested
         """
-        super().__init__(
-            httpMethod, queryStringParameters, headers, pathParameters, body, event
+        super().__init__(responseEvent=responseEvent, sourceEvent=sourceEvent)
+
+    @property
+    def status_code(self) -> int:
+        """
+        Retrieves the status code.
+        :return: The status code.
+        :type: int
+        """
+        return 200
+
+    @property
+    def body(self) -> str:
+        """
+        Retrieves the body.
+        :return: The body.
+        :type: Dict
+        """
+        import json
+
+        return json.dumps(
+            {
+                "message": "Client already exists",
+            }
         )
+
+    @property
+    def headers(self) -> Dict:
+        """
+        Retrieves the headers.
+        :return: The headers.
+        :type: Dict
+        """
+        return {}
+
+    @property
+    def mime_type(self) -> str:
+        """
+        Retrieves the MIME type.
+        :return: The MIME type.
+        :type: str
+        """
+        return "application/json"
+
+    @property
+    def charset(self) -> str:
+        """
+        Retrieves the charset.
+        :return: The charset.
+        :type: str
+        """
+        return "utf-8"
 
     @classmethod
     def event_class(cls) -> Type[ClientAlreadyExists]:

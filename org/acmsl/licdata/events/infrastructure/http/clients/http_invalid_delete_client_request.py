@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/http_new_client_created.py
+org/acmsl/licdata/events/infrastructure/http/clients/http_invalid_delete_client_request.py
 
-This file defines the HttpNewClientCreated class.
+This file defines the HttpInvalidDeleteClientRequest class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -19,34 +19,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import json
-from org.acmsl.licdata.events.clients import NewClientCreated, NewClientRequested
+from org.acmsl.licdata.events.clients import (
+    InvalidDeleteClientRequest,
+    DeleteClientRequested,
+)
 from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
 
-class HttpNewClientCreated(HttpResponse):
+class HttpInvalidDeleteClientRequest(HttpResponse):
     """
-    HTTP interface for NewClientCreated
+    HTTP interface for InvalidDeleteClientRequest
 
-    Class name: HttpNewClientCreated
+    Class name: HttpInvalidDeleteClientRequest
 
     Responsibilities:
-        - Define the HTTP interface for the NewClientCreated event.
+        - Define the HTTP interface for the InvalidDeleteClientRequest event.
 
     Collaborators:
         - None
     """
 
     def __init__(
-        self, responseEvent: NewClientCreated, sourceEvent: NewClientRequested
+        self, event: InvalidDeleteClientRequest, sourceEvent: DeleteClientRequested
     ):
         """
-        Creates a new HttpNewClientCreated.
-        :param responseEvent: The domain event, generated after a NewClientRequested event.
-        :type responseEvent: org.acmsl.licdata.events.clients.NewClientCreated
-        :param sourceEvent: The initial new-client-requested event.
-        :type sourceEvent: org.acmsl.licdata.events.clients.NewClientRequested
+        Creates a new HttpInvalidDeleteClientRequest.
+        :param responseEvent: The domain event, generated after a DeleteClientRequested event.
+        :type responseEvent: org.acmsl.licdata.events.clients.InvalidDeleteClientRequest
+        :param sourceEvent: The initial delete-client-requested event.
+        :type sourceEvent: org.acmsl.licdata.events.clients.DeleteClientRequested
         """
         super().__init__(responseEvent=responseEvent, sourceEvent=sourceEvent)
 
@@ -57,7 +59,7 @@ class HttpNewClientCreated(HttpResponse):
         :return: The status code.
         :type: int
         """
-        return 201
+        return 400
 
     @property
     def body(self) -> str:
@@ -68,11 +70,7 @@ class HttpNewClientCreated(HttpResponse):
         """
         return json.dumps(
             {
-                "id": self._response_event.id,
-                "email": self._response_event.email,
-                "address": self._response_event.address,
-                "contact": self._response_event.contact,
-                "phone": self._response_event.phone,
+                "message": "Invalid delete client request",
             }
         )
 
@@ -83,7 +81,7 @@ class HttpNewClientCreated(HttpResponse):
         :return: The headers.
         :type: Dict
         """
-        return {"Location": f"/clients/{self._response_event.id}"}
+        return {}
 
     @property
     def mime_type(self) -> str:
@@ -104,13 +102,13 @@ class HttpNewClientCreated(HttpResponse):
         return "utf-8"
 
     @classmethod
-    def event_class(cls) -> Type[NewClientCreated]:
+    def event_class(cls) -> Type[InvalidDeleteClientRequest]:
         """
-        Retrieves the class of the event.
+        Retrieves the class of the associated domain event.
         :return: The class.
-        :type: Type[org.acmsl.licdata.event.clients.NewClientCreated]
+        :type: Type[org.acmsl.licdata.event.clients.InvalidDeleteClientRequest]
         """
-        return NewClientCreated
+        return InvalidDeleteClientRequest
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/http_new_client_created.py
+org/acmsl/licdata/events/infrastructure/http/http_client_deleted.py
 
-This file defines the HttpNewClientCreated class.
+This file defines the HttpClientDeleted class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -20,33 +20,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import json
-from org.acmsl.licdata.events.clients import NewClientCreated, NewClientRequested
+from org.acmsl.licdata.events.clients import ClientDeleted, DeleteClientRequested
 from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
 
-class HttpNewClientCreated(HttpResponse):
+class HttpClientDeleted(HttpResponse):
     """
-    HTTP interface for NewClientCreated
+    HTTP interface for ClientDeleted
 
-    Class name: HttpNewClientCreated
+    Class name: HttpClientDeleted
 
     Responsibilities:
-        - Define the HTTP interface for the NewClientCreated event.
+        - Define the HTTP interface for the ClientDeleted event.
 
     Collaborators:
         - None
     """
 
     def __init__(
-        self, responseEvent: NewClientCreated, sourceEvent: NewClientRequested
+        self, responseEvent: ClientDeleted, sourceEvent: DeleteClientRequested
     ):
         """
-        Creates a new HttpNewClientCreated.
+        Creates a new HttpClientDeleted.
         :param responseEvent: The domain event, generated after a NewClientRequested event.
-        :type responseEvent: org.acmsl.licdata.events.clients.NewClientCreated
+        :type responseEvent: org.acmsl.licdata.events.clients.ClientAlreadyExists
         :param sourceEvent: The initial new-client-requested event.
-        :type sourceEvent: org.acmsl.licdata.events.clients.NewClientRequested
+        :type sourceEvent: org.acmsl.licdata.events.clients.DeleteClientRequested
         """
         super().__init__(responseEvent=responseEvent, sourceEvent=sourceEvent)
 
@@ -57,7 +57,7 @@ class HttpNewClientCreated(HttpResponse):
         :return: The status code.
         :type: int
         """
-        return 201
+        return 204
 
     @property
     def body(self) -> str:
@@ -68,11 +68,11 @@ class HttpNewClientCreated(HttpResponse):
         """
         return json.dumps(
             {
-                "id": self._response_event.id,
-                "email": self._response_event.email,
-                "address": self._response_event.address,
-                "contact": self._response_event.contact,
-                "phone": self._response_event.phone,
+                "id": self._event.id,
+                "email": self._event.email,
+                "address": self._event.address,
+                "contact": self._event.contact,
+                "phone": self._event.phone,
             }
         )
 
@@ -83,7 +83,7 @@ class HttpNewClientCreated(HttpResponse):
         :return: The headers.
         :type: Dict
         """
-        return {"Location": f"/clients/{self._response_event.id}"}
+        return {}
 
     @property
     def mime_type(self) -> str:
@@ -104,13 +104,13 @@ class HttpNewClientCreated(HttpResponse):
         return "utf-8"
 
     @classmethod
-    def event_class(cls) -> Type[NewClientCreated]:
+    def event_class(cls) -> Type[ClientDeleted]:
         """
         Retrieves the class of the event.
         :return: The class.
-        :type: Type[org.acmsl.licdata.event.clients.NewClientCreated]
+        :type: Type[org.acmsl.licdata.event.clients.ClientDeleted]
         """
-        return NewClientCreated
+        return ClientDeleted
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

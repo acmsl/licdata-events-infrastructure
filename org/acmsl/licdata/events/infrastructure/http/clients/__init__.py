@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
-from .http_base_client_event import HttpBaseClientEvent
+from .http_client_request import HttpClientRequest
 from .http_client_already_exists import HttpClientAlreadyExists
 from .http_invalid_new_client_request import HttpInvalidNewClientRequest
 from .http_new_client_created import HttpNewClientCreated
@@ -30,7 +30,10 @@ from .http_list_clients_requested import HttpListClientsRequested
 from .http_invalid_list_clients_request import HttpInvalidListClientsRequest
 from .http_matching_clients_found import HttpMatchingClientsFound
 from .http_no_matching_clients_found import HttpNoMatchingClientsFound
-from .http_client_event_factory import HttpClientEventFactory
+from .http_delete_client_requested import HttpDeleteClientRequested
+from .http_client_deleted import HttpClientDeleted
+from .http_invalid_delete_client_request import HttpInvalidDeleteClientRequest
+from .http_client_response_factory import HttpClientResponseFactory
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et
 # Local Variables:
