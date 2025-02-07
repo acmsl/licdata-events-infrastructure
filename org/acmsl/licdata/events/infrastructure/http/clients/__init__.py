@@ -28,11 +28,14 @@ from .http_new_client_created import HttpNewClientCreated
 from .http_new_client_requested import HttpNewClientRequested
 from .http_list_clients_requested import HttpListClientsRequested
 from .http_invalid_list_clients_request import HttpInvalidListClientsRequest
+from .http_matching_client_found import HttpMatchingClientFound
 from .http_matching_clients_found import HttpMatchingClientsFound
 from .http_no_matching_clients_found import HttpNoMatchingClientsFound
 from .http_delete_client_requested import HttpDeleteClientRequested
 from .http_client_deleted import HttpClientDeleted
 from .http_invalid_delete_client_request import HttpInvalidDeleteClientRequest
+from .http_find_client_by_id_requested import HttpFindClientByIdRequested
+from .http_invalid_find_client_by_id_request import HttpInvalidFindClientByIdRequest
 from .http_client_response_factory import HttpClientResponseFactory
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

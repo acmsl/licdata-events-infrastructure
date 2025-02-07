@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/http_delete_client_requested.py
+org/acmsl/licdata/events/infrastructure/http/http_find_client_by_id_requested.py
 
-This file defines the HttpDeleteClientRequested class.
+This file defines the HttpFindClientByIdRequested class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -20,19 +20,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from .http_client_request import HttpClientRequest
-from org.acmsl.licdata.events.clients import DeleteClientRequested
+from org.acmsl.licdata.events.clients import FindClientByIdRequested
 from pythoneda.shared.infrastructure.http import HttpMethod
 from typing import Dict, Type
 
 
-class HttpDeleteClientRequested(HttpClientRequest):
+class HttpFindClientByIdRequested(HttpClientRequest):
     """
-    HTTP interface for DeleteClientRequested
+    HTTP interface for FindClientByIdRequested
 
-    Class name: HttpDeleteClientRequested
+    Class name: HttpFindClientByIdRequested
 
     Responsibilities:
-        - Define the HTTP interface for the DeleteClientRequested event.
+        - Define the HTTP interface for the FindClientByIdRequested event.
 
     Collaborators:
         - None
@@ -47,7 +47,7 @@ class HttpDeleteClientRequested(HttpClientRequest):
         body: Dict,
     ):
         """
-        Creates a new HttpDeleteClientRequested.
+        Creates a new HttpFindClientByIdRequested.
         :param httpMethod: The HTTP method.
         :type httpMethod: pythoneda.shared.infrastructure.http.HttpMethod
         :param queryStringParameters: The query string parameters.
@@ -63,22 +63,22 @@ class HttpDeleteClientRequested(HttpClientRequest):
             httpMethod, queryStringParameters, headers, pathParameters, body
         )
 
-    def to_event(self) -> DeleteClientRequested:
+    def to_event(self) -> FindClientByIdRequested:
         """
         Retrieves the event.
         :return: The event.
-        :rtype: org.acmsl.licdata.events.clients.DeleteClientRequested
+        :rtype: org.acmsl.licdata.events.clients.FindClientByIdRequested
         """
-        return DeleteClientRequested(entityId=self.entity_id)
+        return FindClientByIdRequested(entityId=self.entity_id)
 
     @classmethod
-    def event_class(cls) -> Type[DeleteClientRequested]:
+    def event_class(cls) -> Type[FindClientByIdRequested]:
         """
         Retrieves the class of the associated domain event.
         :return: The class.
-        :type: Type[org.acmsl.licdata.events.clients.DeleteClientRequested]
+        :type: Type[org.acmsl.licdata.events.clients.FindClientByIdRequested]
         """
-        return DeleteClientRequested
+        return FindClientByIdRequested
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

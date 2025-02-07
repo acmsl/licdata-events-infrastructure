@@ -1,8 +1,8 @@
 # vim: set fileencoding=utf-8
 """
-org/acmsl/licdata/events/infrastructure/http/http_client_deleted.py
+org/acmsl/licdata/events/infrastructure/http/clients/http_invalid_find_client_by_id_request.py
 
-This file defines the HttpClientDeleted class.
+This file defines the HttpInvalidFindClientByIdRequest class.
 
 Copyright (C) 2024-today acmsl's Licdata-Events-Infrastructure
 
@@ -19,34 +19,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import json
-from org.acmsl.licdata.events.clients import ClientDeleted, DeleteClientRequested
+from org.acmsl.licdata.events.clients import (
+    InvalidFindClientByIdRequest,
+    FindClientByIdRequested,
+)
 from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
 
-class HttpClientDeleted(HttpResponse):
+class HttpInvalidFindClientByIdRequest(HttpResponse):
     """
-    HTTP interface for ClientDeleted
+    HTTP interface for InvalidFindClientByIdRequest
 
-    Class name: HttpClientDeleted
+    Class name: HttpInvalidFindClientByIdRequest
 
     Responsibilities:
-        - Define the HTTP interface for the ClientDeleted event.
+        - Define the HTTP interface for the InvalidFindClientByIdRequest event.
 
     Collaborators:
         - None
     """
 
     def __init__(
-        self, responseEvent: ClientDeleted, sourceEvent: DeleteClientRequested
+        self, event: InvalidFindClientByIdRequest, sourceEvent: FindClientByIdRequested
     ):
         """
-        Creates a new HttpClientDeleted.
-        :param responseEvent: The domain event, generated after a NewClientRequested event.
-        :type responseEvent: org.acmsl.licdata.events.clients.ClientAlreadyExists
-        :param sourceEvent: The initial new-client-requested event.
-        :type sourceEvent: org.acmsl.licdata.events.clients.DeleteClientRequested
+        Creates a new HttpInvalidFindClientByIdRequest.
+        :param responseEvent: The domain event, generated after a FindClientByIdRequested event.
+        :type responseEvent: org.acmsl.licdata.events.clients.InvalidFindClientByIdRequest
+        :param sourceEvent: The initial find-client-by-id-requested event.
+        :type sourceEvent: org.acmsl.licdata.events.clients.FindClientByIdRequested
         """
         super().__init__(responseEvent=responseEvent, sourceEvent=sourceEvent)
 
@@ -57,7 +59,7 @@ class HttpClientDeleted(HttpResponse):
         :return: The status code.
         :type: int
         """
-        return 204
+        return 400
 
     @property
     def body(self) -> str:
@@ -68,11 +70,7 @@ class HttpClientDeleted(HttpResponse):
         """
         return json.dumps(
             {
-                "id": self._response_event.id,
-                "email": self._response_event.email,
-                "address": self._response_event.address,
-                "contact": self._response_event.contact,
-                "phone": self._response_event.phone,
+                "message": "Invalid delete client request",
             }
         )
 
@@ -104,13 +102,13 @@ class HttpClientDeleted(HttpResponse):
         return "utf-8"
 
     @classmethod
-    def event_class(cls) -> Type[ClientDeleted]:
+    def event_class(cls) -> Type[InvalidFindClientByIdRequest]:
         """
-        Retrieves the class of the event.
+        Retrieves the class of the associated domain event.
         :return: The class.
-        :type: Type[org.acmsl.licdata.event.clients.ClientDeleted]
+        :type: Type[org.acmsl.licdata.event.clients.InvalidFindClientByIdRequest]
         """
-        return ClientDeleted
+        return InvalidFindClientByIdRequest
 
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et

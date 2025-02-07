@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from org.acmsl.licdata.events.clients import (
     BaseClientEvent,
     DeleteClientRequested,
+    FindClientByIdRequested,
     ListClientsRequested,
     NewClientRequested,
 )
@@ -29,8 +30,10 @@ from org.acmsl.licdata.events.infrastructure.http.clients import (
     HttpClientAlreadyExists,
     HttpClientDeleted,
     HttpInvalidDeleteClientRequest,
+    HttpInvalidFindClientByIdRequest,
     HttpInvalidListClientsRequest,
     HttpInvalidNewClientRequest,
+    HttpMatchingClientFound,
     HttpMatchingClientsFound,
     HttpNewClientCreated,
     HttpNoMatchingClientsFound,
@@ -93,6 +96,33 @@ class HttpClientResponseFactory(BaseObject):
         ]:
             if isinstance(event, target.event_class()):
                 result = target(responseEvent=event, sourceEvent=newClientRequested)
+                break
+
+        return result
+
+    def from_find_client_by_id_requested(
+        self, event: Event, findClientByIdRequested: FindClientByIdRequested
+    ) -> HttpResponse:
+        """
+        Creates a HTTP-based event from given domain event.
+        :param event: The domain event, generated after a FindClientByIdRequested event.
+        :type event: pythoneda.shared.Event
+        :param findClientByIdRequested: The initial new-client-requested event.
+        :type findClientByIdRequested: org.acmsl.licdata.events.clients.FindClientByIdRequested
+        :return: The HTTP response.
+        :rtype: pythoneda.shared.infrastructure.http.HttpResponse
+        """
+        result = None
+
+        for target in [
+            HttpMatchingClientFound,
+            HttpInvalidFindClientByIdRequest,
+            HttpNoMatchingClientsFound,
+        ]:
+            if isinstance(event, target.event_class()):
+                result = target(
+                    responseEvent=event, sourceEvent=findClientByIdRequested
+                )
                 break
 
         return result

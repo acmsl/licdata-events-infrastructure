@@ -23,12 +23,11 @@ from org.acmsl.licdata.events.clients import (
     InvalidListClientsRequest,
     ListClientsRequested,
 )
-from pythoneda.shared import Event
 from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
 
-class HttpInvalidListClientsRequest(Event):
+class HttpInvalidListClientsRequest(HttpResponse):
     """
     HTTP interface for InvalidListClientsRequest
 

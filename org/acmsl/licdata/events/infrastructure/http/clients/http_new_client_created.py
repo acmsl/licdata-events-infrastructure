@@ -64,17 +64,19 @@ class HttpNewClientCreated(HttpResponse):
         """
         Retrieves the body.
         :return: The body.
-        :type: Dict
+        :rtype: str
         """
-        return json.dumps(
-            {
-                "id": self._response_event.id,
-                "email": self._response_event.email,
-                "address": self._response_event.address,
-                "contact": self._response_event.contact,
-                "phone": self._response_event.phone,
-            }
-        )
+        result = {}
+        result["id"] = self._response_event.entity_id
+        result["email"] = self._response_event.email
+        if self._response_event.address is not None:
+            result["address"] = self._response_event.address
+        if self._response_event.contact is not None:
+            result["contact"] = self._response_event.contact
+        if self._response_event.phone is not None:
+            result["phone"] = self._response_event.phone
+
+        return json.dumps(result)
 
     @property
     def headers(self) -> Dict:
@@ -83,7 +85,7 @@ class HttpNewClientCreated(HttpResponse):
         :return: The headers.
         :type: Dict
         """
-        return {"Location": f"/clients/{self._response_event.id}"}
+        return {"Location": f"/clients/{self._response_event.entity_id}"}
 
     @property
     def mime_type(self) -> str:
