@@ -19,13 +19,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from .http_client_request import HttpClientRequest
 from org.acmsl.licdata.events.clients import ListClientsRequested
-from pythoneda.shared.infrastructure.http import HttpMethod
-from typing import Dict, Type
+from pythoneda.shared.infrastructure.http import HttpRequest, HttpMethod
+from typing import Dict, Optional, Type
 
 
-class HttpListClientsRequested(HttpClientRequest):
+class HttpListClientsRequested(HttpRequest):
     """
     HTTP interface for ListClientsRequested
 
@@ -62,6 +61,32 @@ class HttpListClientsRequested(HttpClientRequest):
         super().__init__(
             httpMethod, queryStringParameters, headers, pathParameters, body
         )
+
+    @property
+    def offset(self) -> Optional[int]:
+        """
+        Retrieves the phone.
+        :return: Such value.
+        :rtype: Optional[int]
+        """
+        return self.retrieve_param("offset", None)
+
+    @property
+    def limit(self) -> Optional[int]:
+        """
+        Retrieves the maximum number of items.
+        :return: Such value.
+        :rtype: Optional[int]
+        """
+        return self.retrieve_param("limit", None)
+
+    def to_event(self) -> ListClientsRequested:
+        """
+        Retrieves the event.
+        :return: The event.
+        :rtype: org.acmsl.licdata.events.clients.ListClientsRequested
+        """
+        return ListClientsRequested(offset=self.offset, limit=self.limit)
 
     @classmethod
     def event_class(cls) -> Type[ListClientsRequested]:

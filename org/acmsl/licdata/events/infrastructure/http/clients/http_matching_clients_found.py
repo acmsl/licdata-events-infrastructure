@@ -19,7 +19,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from org.acmsl.licdata.events.clients import ListClientsRequested, MatchingClientsFound
+from org.acmsl.licdata.events.clients import (
+    BaseClientEvent,
+    ListClientsRequested,
+    MatchingClientsFound,
+)
 from pythoneda.shared.infrastructure.http import HttpResponse
 from typing import Dict, Type
 
@@ -56,7 +60,10 @@ class HttpMatchingClientsFound(HttpResponse):
         :return: The status code.
         :type: int
         """
-        return 200
+        if len(self._response_event.matching_clients) == 0:
+            return 204
+        else:
+            return 200
 
     @property
     def body(self) -> Dict:
@@ -65,14 +72,25 @@ class HttpMatchingClientsFound(HttpResponse):
         :return: The body.
         :type: Dict
         """
+        if isinstance(self._source_event, BaseClientEvent):
+            # TODO: Fix this
+            result = {}
+            result["clients"] = [c for c in self._response_event.matching_clients]
+            criteria = {}
+            if self._source_event.email is not None:
+                criteria["email"] = self._source_event.email
+            if self._source_event.address is not None:
+                criteria["address"] = self._source_event.address
+            if self._source_event.contact is not None:
+                criteria["contact"] = self._source_event.contact
+            if self._source_event.phone is not None:
+                criteria["phone"] = self._source_event.phone
+            result["criteria"] = criteria
+        else:
+            result = [c for c in self._response_event.matching_clients]
         import json
 
-        return json.dumps(
-            {
-                "clients": [c for c in self._event.matching_clients],
-                "criteria": self._event.criteria,
-            }
-        )
+        return json.dumps(result)
 
     @property
     def headers(self) -> Dict:

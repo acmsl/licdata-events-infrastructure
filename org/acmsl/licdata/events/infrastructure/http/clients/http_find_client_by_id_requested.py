@@ -19,13 +19,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from .http_client_request import HttpClientRequest
 from org.acmsl.licdata.events.clients import FindClientByIdRequested
-from pythoneda.shared.infrastructure.http import HttpMethod
+from pythoneda.shared.infrastructure.http import HttpRequest, HttpMethod
 from typing import Dict, Type
 
 
-class HttpFindClientByIdRequested(HttpClientRequest):
+class HttpFindClientByIdRequested(HttpRequest):
     """
     HTTP interface for FindClientByIdRequested
 
