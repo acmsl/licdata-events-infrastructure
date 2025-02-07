@@ -62,6 +62,15 @@ class HttpFindClientByIdRequested(HttpRequest):
             httpMethod, queryStringParameters, headers, pathParameters, body
         )
 
+    @property
+    def entity_id(self) -> str:
+        """
+        Retrieves the entity id.
+        :return: Such value.
+        :rtype: str
+        """
+        return self.retrieve_param("id", None)
+
     def to_event(self) -> FindClientByIdRequested:
         """
         Retrieves the event.
