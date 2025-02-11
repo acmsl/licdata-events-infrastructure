@@ -25,14 +25,17 @@ from org.acmsl.licdata.events.clients import (
     FindClientByIdRequested,
     ListClientsRequested,
     NewClientRequested,
+    UpdateClientRequested,
 )
 from org.acmsl.licdata.events.infrastructure.http.clients import (
     HttpClientAlreadyExists,
     HttpClientDeleted,
+    HttpClientUpdated,
     HttpInvalidDeleteClientRequest,
     HttpInvalidFindClientByIdRequest,
     HttpInvalidListClientsRequest,
     HttpInvalidNewClientRequest,
+    HttpInvalidUpdateClientRequest,
     HttpMatchingClientFound,
     HttpMatchingClientsFound,
     HttpNewClientCreated,
@@ -173,6 +176,31 @@ class HttpClientResponseFactory(BaseObject):
         ]:
             if isinstance(event, target.event_class()):
                 result = target(responseEvent=event, sourceEvent=deleteClientRequested)
+                break
+
+        return result
+
+    def from_update_client_requested(
+        self, event: Event, updateClientRequested: UpdateClientRequested
+    ) -> HttpResponse:
+        """
+        Creates a HTTP-based event from given domain event.
+        :param event: The domain event, generated after a UpdateClientRequested event.
+        :type event: pythoneda.shared.Event
+        :param updateClientRequested: The initial new-client-requested event.
+        :type updateClientRequested: org.acmsl.licdata.events.clients.UpdateClientRequested
+        :return: The HTTP response.
+        :rtype: pythoneda.shared.infrastructure.http.HttpResponse
+        """
+        result = None
+
+        for target in [
+            HttpClientUpdated,
+            HttpInvalidUpdateClientRequest,
+            HttpNoMatchingClientsFound,
+        ]:
+            if isinstance(event, target.event_class()):
+                result = target(responseEvent=event, sourceEvent=updateClientRequested)
                 break
 
         return result

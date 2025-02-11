@@ -34,8 +34,11 @@ from .http_no_matching_clients_found import HttpNoMatchingClientsFound
 from .http_delete_client_requested import HttpDeleteClientRequested
 from .http_client_deleted import HttpClientDeleted
 from .http_invalid_delete_client_request import HttpInvalidDeleteClientRequest
+from .http_invalid_update_client_request import HttpInvalidUpdateClientRequest
 from .http_find_client_by_id_requested import HttpFindClientByIdRequested
 from .http_invalid_find_client_by_id_request import HttpInvalidFindClientByIdRequest
+from .http_update_client_requested import HttpUpdateClientRequested
+from .http_client_updated import HttpClientUpdated
 from .http_client_response_factory import HttpClientResponseFactory
 
 # vim: syntax=python ts=4 sw=4 sts=4 tw=79 sr et
